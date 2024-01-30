@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #2c3e50;
+            color: #ecf0f1;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #34495e;
+        }
+
+        .screen {
+            text-align: center;
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #3498db;
+        }
+
+        .seats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+            gap: 5px;
+        }
+
+        .seat {
+            width: 40px;
+            height: 40px;
+            background-color: #e74c3c;
+            border: 1px solid #c0392b;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .seat.selected {
+            background-color: #2ecc71;
+            color: white;
+        }
+
+        .booking-info {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        button {
+            padding: 10px;
+            font-size: 16px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:disabled {
+            background-color: #7f8c8d;
+            cursor: not-allowed;
+        }
+    </style>
+    <title>Seat Booking</title>
+</head>
+<body>
+
+<div class="container">
+    <div class="screen">Screen</div>
+    <div class="seats-container">
+        <!-- Seats will be dynamically generated here -->
+    </div>
+    <div class="booking-info">
+        <p>Selected Seats: <span id="selected-seats">0</span></p>
+        <p>Total Price: $<span id="total-price">0</span></p>
+        <button id="book-btn" disabled>Book Now</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const seatsContainer = document.querySelector('.seats-container');
+            const selectedSeats = document.getElementById('selected-seats');
+            const totalPrice = document.getElementById('total-price');
+            const bookBtn = document.getElementById('book-btn');
+
+            let selectedSeatCount = 0;
+            let totalBookingPrice = 0;
+
+            // Function to update UI with selected seats and total price
+            function updateBookingInfo() {
+                selectedSeats.textContent = selectedSeatCount;
+                totalPrice.textContent = totalBookingPrice.toFixed(2);
+                bookBtn.disabled = selectedSeatCount === 0;
+            }
+
+            // Function to create seat elements dynamically
+            function createSeatElement() {
+                const seat = document.createElement('div');
+                seat.classList.add('seat');
+
+                seat.addEventListener('click', () => {
+                    seat.classList.toggle('selected');
+                    if (seat.classList.contains('selected')) {
+                        selectedSeatCount++;
+                        totalBookingPrice += 10; // Adjust the price based on your requirements
+                    } else {
+                        selectedSeatCount--;
+                        totalBookingPrice -= 10; // Adjust the price based on your requirements
+                    }
+
+                    updateBookingInfo();
+                });
+
+                return seat;
+            }
+
+            // Function to generate seats grid
+            function generateSeatsGrid(rows, cols) {
+                for (let row = 0; row < rows; row++) {
+                    for (let col = 0; col < cols; col++) {
+                        const seat = createSeatElement();
+                        seatsContainer.appendChild(seat);
+                    }
+                }
+            }
+
+            // Generate seats grid (you can adjust the number of rows and columns)
+            generateSeatsGrid(6, 10);
+
+            // Initial UI update
+            updateBookingInfo();
+        });
+    </script>
+</div>
+
+</body>
+</html>
+
